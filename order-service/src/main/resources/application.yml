@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        # inputs
+        products:
+          destination: products
+          group: order-service
+        # outputs
+        orders:
+          destination: common
+
+      rabbit:
+        bindings:
+          # inputs
+          products:
+            consumer:
+              binding-routing-key: 'products'
+              queue-name-group-only: true
+          # outputs
+          orders:
+            producer:
+              routing-key-expression: '''orders'''
