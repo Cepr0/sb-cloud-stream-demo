@@ -1,7 +1,8 @@
-version: '3'
+version: '2.1'
 
 services:
-  rabbitmq:
+
+  rabbit:
     image: rabbitmq:management
     container_name: rabbit
     networks:
@@ -9,6 +10,21 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    healthcheck:
+      timeout: 5s
+      interval: 5s
+      retries: 5
+      test: ["CMD", "rabbitmqctl", "status"]
+
+  ready:
+    image: alpine
+    container_name: ready
+    networks:
+      - rabbit-network
+    restart: 'no'
+    depends_on:
+      rabbit:
+        condition: service_healthy
 
 networks:
   rabbit-network:

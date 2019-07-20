@@ -24,6 +24,7 @@
         <module>product-service</module>
         <module>commons</module>
         <module>service-parent</module>
+        <module>config</module>
     </modules>
 
     <properties>

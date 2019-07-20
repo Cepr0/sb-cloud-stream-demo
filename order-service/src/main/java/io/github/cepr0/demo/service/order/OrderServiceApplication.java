@@ -16,7 +16,7 @@ import org.springframework.messaging.support.GenericMessage;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-@EnableBinding(Channel.class)
+@EnableBinding(Channels.class)
 @SpringBootApplication
 public class OrderServiceApplication {
 
@@ -27,7 +27,7 @@ public class OrderServiceApplication {
 	}
 
 	@Bean
-	@InboundChannelAdapter(channel = Channel.ORDERS, poller = @Poller(fixedDelay = "1000"))
+	@InboundChannelAdapter(channel = Channels.ORDERS, poller = @Poller(fixedDelay = "1000"))
 	public MessageSource<Order> sendOrder() {
 		return () -> {
 			int i = COUNTER.incrementAndGet();
@@ -37,7 +37,7 @@ public class OrderServiceApplication {
 		};
 	}
 
-	@StreamListener(Channel.PRODUCTS)
+	@StreamListener(Channels.PRODUCTS)
 	public void receiveProduct(Product product) {
 		log.info("[i] Received: {}", product);
 	}

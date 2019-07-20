@@ -10,7 +10,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 @Slf4j
-@EnableBinding(Channel.class)
+@EnableBinding(Channels.class)
 @SpringBootApplication
 public class ProductServiceApplication {
 
@@ -18,8 +18,8 @@ public class ProductServiceApplication {
 		SpringApplication.run(ProductServiceApplication.class, args);
 	}
 
-	@StreamListener(Channel.ORDERS)
-	@SendTo(Channel.PRODUCTS)
+	@StreamListener(Channels.ORDERS)
+	@SendTo(Channels.PRODUCTS)
 	public Product receiveOrder(Order order) {
 		log.info("[i] Received: {}", order);
 		Integer orderNum = order.getNum();

@@ -1,18 +1,18 @@
-package io.github.cepr0.demo.service.product;
+package io.github.cepr0.demo.service.order;
 
 import org.springframework.cloud.stream.annotation.Input;
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.SubscribableChannel;
 
-public interface Channel {
+public interface Channels {
 
-	String ORDERS = "orders";
 	String PRODUCTS = "products";
+	String ORDERS = "orders";
 
-	@Input(ORDERS)
-	SubscribableChannel orders();
+	@Input(PRODUCTS)
+	SubscribableChannel products();
 
-	@Output(PRODUCTS)
-	MessageChannel products();
+	@Output(ORDERS)
+	MessageChannel orders();
 }
