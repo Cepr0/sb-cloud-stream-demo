@@ -1,30 +1,31 @@
-version: '2.1'
+version: '2.4'
 
 services:
 
   rabbit:
     image: rabbitmq:management
     container_name: rabbit
-    networks:
-      - rabbit-network
     ports:
       - 5672:5672
       - 15672:15672
     healthcheck:
+      test: rabbitmqctl status
       timeout: 5s
       interval: 5s
       retries: 5
-      test: ["CMD", "rabbitmqctl", "status"]
+
+  postgres:
+    extends:
+      file: postgres-compose.yml
+      service: postgresql
 
   ready:
     image: alpine
     container_name: ready
-    networks:
-      - rabbit-network
     restart: 'no'
     depends_on:
       rabbit:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
 
-networks:
-  rabbit-network:
