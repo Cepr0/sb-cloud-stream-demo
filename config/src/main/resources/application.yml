@@ -2,20 +2,31 @@ spring:
   cloud:
     stream:
       bindings:
-        products-to-order-service:
+        # to order-service
+        order-completed-to-order-service:
           destination: common
-          group: order-service
-        orders-to-product-service:
+          group: order-completed.order-service
+        order-failed-to-order-service:
           destination: common
-          group: product-service
+          group: order-failed.order-service
+        # to product-service
+        order-created-to-product-service:
+          destination: common
+          group: order-created.product-service
 
       rabbit:
         bindings:
-          products-to-order-service:
+          # to order-service
+          order-completed-to-order-service:
             consumer:
-              binding-routing-key: 'products'
+              binding-routing-key: 'order-completed'
               queue-name-group-only: true
-          orders-to-product-service:
+          order-failed-to-order-service:
             consumer:
-              binding-routing-key: 'orders'
+              binding-routing-key: 'order-failed'
+              queue-name-group-only: true
+          # to product-service
+          order-created-to-product-service:
+            consumer:
+              binding-routing-key: 'order-created'
               queue-name-group-only: true

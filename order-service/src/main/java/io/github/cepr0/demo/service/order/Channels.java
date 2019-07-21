@@ -7,12 +7,16 @@ import org.springframework.messaging.SubscribableChannel;
 
 public interface Channels {
 
-	String PRODUCTS = "products";
-	String ORDERS = "orders";
+	String ORDER_COMPLETED = "order-completed";
+	String ORDER_FAILED = "order-failed";
+	String ORDER_CREATED = "order-created";
 
-	@Input(PRODUCTS)
-	SubscribableChannel products();
+	@Input(ORDER_COMPLETED)
+	SubscribableChannel orderCompleted();
 
-	@Output(ORDERS)
-	MessageChannel orders();
+	@Input(ORDER_FAILED)
+	SubscribableChannel orderFailed();
+
+	@Output(ORDER_CREATED)
+	MessageChannel orderCreated();
 }

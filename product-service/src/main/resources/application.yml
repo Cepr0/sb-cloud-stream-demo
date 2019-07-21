@@ -3,21 +3,28 @@ spring:
     stream:
       bindings:
         # inputs
-        orders:
-          destination: orders
+        order-created:
+          destination: order-created
           group: product-service
         # outputs
-        products:
+        order-completed:
+          destination: common
+
+        order-failed:
           destination: common
 
       rabbit:
         bindings:
           # inputs
-          orders:
+          order-created:
             consumer:
-              binding-routing-key: 'orders'
-              queue-name-group-only: true
+              binding-routing-key: 'order-created'
+              queue-name-group-only: false
           # outputs
-          products:
+          order-completed:
             producer:
-              routing-key-expression: '''products'''
+              routing-key-expression: '''order-completed'''
+
+          order-failed:
+            producer:
+              routing-key-expression: '''order-failed'''
