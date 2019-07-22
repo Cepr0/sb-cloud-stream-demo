@@ -1,6 +1,6 @@
 package io.github.cepr0.demo.commons.repo;
 
-import io.github.cepr0.demo.commons.model.Product;
+import io.github.cepr0.demo.commons.model.product.Product;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;

@@ -1,6 +1,6 @@
 package io.github.cepr0.demo.service.order;
 
-import io.github.cepr0.demo.commons.model.Order;
+import io.github.cepr0.demo.commons.model.order.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.github.cepr0.demo.commons.model.Order.Status;
+import static io.github.cepr0.demo.commons.model.order.Order.Status;
 
 @Slf4j
 @Component

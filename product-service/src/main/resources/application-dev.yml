@@ -1,0 +1,14 @@
+logging:
+  level:
+    io.github.cepr0: debug
+    org:
+      springframework:
+        orm.jpa: debug
+        web: error
+
+spring:
+  flyway:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

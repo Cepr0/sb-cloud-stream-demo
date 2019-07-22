@@ -28,3 +28,39 @@ spring:
           order-failed:
             producer:
               routing-key-expression: '''order-failed'''
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product_service
+    username: postgres
+    password: postgres
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          lob.non_contextual_creation: true
+          batch_size: 20
+          fetch_size: 20
+          batch_versioned_data: true
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+logging:
+  level:
+    jdbc:
+      sqltiming: info
+      resultsettable: info
+      sqlonly: fatal
+      audit: fatal
+      resultset: fatal
+      connection: fatal
+
+log4jdbc:
+  dump.sql:
+    addsemicolon: true
+    maxlinelength: 0
+  trim.sql.extrablanklines: false

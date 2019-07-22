@@ -3,7 +3,7 @@ package io.github.cepr0.demo.service.order;
 import io.github.cepr0.demo.commons.event.OrderCompleted;
 import io.github.cepr0.demo.commons.event.OrderCreated;
 import io.github.cepr0.demo.commons.event.OrderFailed;
-import io.github.cepr0.demo.commons.model.Order;
+import io.github.cepr0.demo.commons.model.order.Order;
 import io.github.cepr0.demo.commons.repo.ProductRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,13 +11,12 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static io.github.cepr0.demo.commons.model.Order.Status.COMPLETED;
-import static io.github.cepr0.demo.commons.model.Order.Status.FAILED;
+import static io.github.cepr0.demo.commons.model.order.Order.Status.COMPLETED;
+import static io.github.cepr0.demo.commons.model.order.Order.Status.FAILED;
 import static io.github.cepr0.demo.service.order.Channels.ORDER_CREATED;
 
 @Slf4j
@@ -40,7 +39,7 @@ public class OrderService {
 		random = ThreadLocalRandom.current();
 	}
 
-	@Scheduled(fixedDelay = 1000)
+	// @Scheduled(fixedDelay = 1000)
 	public void run() {
 		productRepo.get(random.nextInt(1, productRepo.count()))
 				.stream()
