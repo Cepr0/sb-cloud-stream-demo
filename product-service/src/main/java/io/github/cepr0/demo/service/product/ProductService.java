@@ -1,55 +1,31 @@
 package io.github.cepr0.demo.service.product;
 
-import io.github.cepr0.demo.commons.event.Event;
-import io.github.cepr0.demo.commons.event.OrderCompleted;
-import io.github.cepr0.demo.commons.event.OrderCreated;
-import io.github.cepr0.demo.commons.event.OrderFailed;
-import io.github.cepr0.demo.commons.repo.ProductRepo;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.messaging.support.GenericMessage;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import javax.persistence.OptimisticLockException;
+import java.util.Optional;
 
-@Slf4j
-@EnableBinding(Channels.class)
+@Service
 public class ProductService {
 
-	private final ProductRepo productRepo;
-	private final Channels channels;
+	private final ProductAmountRepo productAmountRepo;
 
-	public ProductService(ProductRepo productRepo, Channels channels) {
-		this.productRepo = productRepo;
-		this.channels = channels;
+	public ProductService(ProductAmountRepo productAmountRepo) {
+		this.productAmountRepo = productAmountRepo;
 	}
 
-	@StreamListener(Channels.ORDER_CREATED)
-	public void handle(OrderCreated orderCreatedEvent) {
-		log.info("[i] Received: {}", orderCreatedEvent);
-
-		int productId = orderCreatedEvent.getOrder().getProductId();
-		UUID orderId = orderCreatedEvent.getOrder().getId();
-
-		Event outboundEvent = productRepo.get(productId)
-				.map(product -> productRepo.sell(productId)
-						.map(p -> (Event) OrderCompleted.of(orderId))
-						.orElse(OrderFailed.productEnded(orderId, productId)))
-				.orElse(OrderFailed.productNotFound(orderId, productId));
-
-		log.info("[i] Sending: {}", outboundEvent);
-		send(outboundEvent);
-	}
-
-	void send(Event event) {
-		var message = new GenericMessage<>(event);
-
-		if (event instanceof OrderCompleted) {
-			channels.orderCompleted().send(message);
-		}
-
-		if (event instanceof OrderFailed) {
-			channels.orderFailed().send(message);
-		}
+	@Transactional
+	@Retryable(OptimisticLockException.class)
+	public Optional<Integer> sell(int productId) {
+		return productAmountRepo.findById(productId)
+				.map(productAmount -> {
+					int amount = productAmount.getAmount();
+					if (amount > 0) {
+						productAmount.setAmount(amount - 1);
+					}
+					return amount;
+				});
 	}
 }

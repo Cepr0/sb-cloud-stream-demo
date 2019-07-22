@@ -23,8 +23,9 @@
         <module>order-service</module>
         <module>product-service</module>
         <module>commons</module>
-        <module>service-parent</module>
+        <module>db-parent</module>
         <module>config</module>
+        <module>message-parent</module>
     </modules>
 
     <properties>
@@ -48,5 +49,26 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <exludes>
+                            <exclude>
+                                <dependency>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </dependency>
+                            </exclude>
+                        </exludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>

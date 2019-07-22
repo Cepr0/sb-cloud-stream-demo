@@ -1,13 +1,13 @@
 package io.github.cepr0.demo.commons.event;
 
-import lombok.Getter;
+import io.github.cepr0.demo.commons.model.order.Reason;
 import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static io.github.cepr0.demo.commons.event.OrderFailed.Reason.PRODUCT_ENDED;
-import static io.github.cepr0.demo.commons.event.OrderFailed.Reason.PRODUCT_NOT_FOUND;
+import static io.github.cepr0.demo.commons.model.order.Reason.PRODUCT_ENDED;
+import static io.github.cepr0.demo.commons.model.order.Reason.PRODUCT_NOT_FOUND;
 
 @Value
 public class OrderFailed implements Event {
@@ -28,14 +28,4 @@ public class OrderFailed implements Event {
 		return new OrderFailed(orderId, LocalDateTime.now(), productId, PRODUCT_ENDED);
 	}
 
-	public enum Reason {
-		PRODUCT_NOT_FOUND("Product not found"),
-		PRODUCT_ENDED("Product ended");
-
-		@Getter private final String message;
-
-		Reason(String message) {
-			this.message = message;
-		}
-	}
 }

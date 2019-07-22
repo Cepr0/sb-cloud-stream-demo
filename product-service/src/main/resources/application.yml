@@ -46,8 +46,6 @@ spring:
           batch_versioned_data: true
     hibernate:
       ddl-auto: validate
-  flyway:
-    enabled: true
 
 logging:
   level:

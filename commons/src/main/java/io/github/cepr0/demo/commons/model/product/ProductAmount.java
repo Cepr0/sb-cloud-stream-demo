@@ -4,7 +4,6 @@ import io.github.cepr0.demo.commons.model.base.IntIdEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Tolerate;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -24,11 +23,5 @@ public class ProductAmount extends IntIdEntity {
 	private Product product;
 
 	@Column(nullable = false)
-	private Integer amount;
-
-	@Tolerate
-	public ProductAmount(Product product, Integer amount) {
-		this.product = product;
-		this.amount = amount;
-	}
+	private int amount;
 }

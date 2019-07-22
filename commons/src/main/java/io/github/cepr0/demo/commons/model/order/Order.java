@@ -9,7 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class Order extends UuidEntity {
 
 	@Column(nullable = false)
-	private LocalDateTime createdAt;
+	private Instant createdAt;
 
 	@Column(nullable = false, length = 9)
 	@Enumerated(EnumType.STRING)
@@ -30,8 +30,12 @@ public class Order extends UuidEntity {
 	@Column(nullable = false)
 	private int productId;
 
+	@Column(length = 17)
+	@Enumerated(EnumType.STRING)
+	private Reason reason;
+
 	@Tolerate
-	private Order(LocalDateTime createdAt, Status status, int productId) {
+	private Order(Instant createdAt, Status status, int productId) {
 		this.createdAt = createdAt;
 		this.status = status;
 		this.productId = productId;
@@ -39,10 +43,21 @@ public class Order extends UuidEntity {
 
 	public static Order of(int productId) {
 		return new Order(
-				LocalDateTime.now(),
+				Instant.now(),
 				Status.PENDING,
 				productId
 		);
+	}
+
+	public Order markAsCompleted() {
+		this.status = Status.COMPLETED;
+		return this;
+	}
+
+	public Order markAsFailed(Reason reason) {
+		this.status = Status.FAILED;
+		this.reason = reason;
+		return this;
 	}
 
 	public enum Status {

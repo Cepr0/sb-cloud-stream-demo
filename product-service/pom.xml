@@ -5,9 +5,9 @@
 
     <parent>
         <groupId>io.github.cepr0</groupId>
-        <artifactId>sb-cloud-stream-demo-service-parent</artifactId>
+        <artifactId>sb-cloud-stream-demo-db-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../service-parent/pom.xml</relativePath>
+        <relativePath>../db-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>sb-cloud-stream-demo-product-service</artifactId>
@@ -16,10 +16,10 @@
     <description>Product service module</description>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-web</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

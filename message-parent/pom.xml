@@ -10,11 +10,11 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>sb-cloud-stream-demo-service-parent</artifactId>
+    <artifactId>sb-cloud-stream-demo-message-parent</artifactId>
     <packaging>pom</packaging>
 
-    <name>service-parent</name>
-    <description>Parent module for services</description>
+    <name>message-parent</name>
+    <description>Parent module for message related modules</description>
 
     <properties>
         <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
@@ -65,26 +65,10 @@
             <artifactId>sb-cloud-stream-demo-commons</artifactId>
         </dependency>
 
+        <!-- To correct serialize/deserialize java8 time objects -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.integralblue</groupId>
-            <artifactId>log4jdbc-spring-boot-starter</artifactId>
-            <version>1.0.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <artifactId>spring-boot-starter-json</artifactId>
         </dependency>
 
         <dependency>
@@ -99,28 +83,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <configuration>
-                        <executable>true</executable>
-                        <exludes>
-                            <exclude>
-                                <dependency>
-                                    <groupId>org.projectlombok</groupId>
-                                    <artifactId>lombok</artifactId>
-                                </dependency>
-                            </exclude>
-                        </exludes>
-                    </configuration>
-                </plugin>
-
-            </plugins>
-        </pluginManagement>
-    </build>
 
 </project>

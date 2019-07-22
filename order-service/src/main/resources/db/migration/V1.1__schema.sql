@@ -3,5 +3,6 @@ create table orders (
   version    integer,
   created_at timestamp  not null,
   product_id integer    not null,
-  status     varchar(9) not null
+  status     varchar(9) not null,
+  reason     varchar(17)
 );

@@ -5,17 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>sb-cloud-stream-demo-service-parent</artifactId>
+        <artifactId>sb-cloud-stream-demo-message-parent</artifactId>
         <groupId>io.github.cepr0</groupId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../service-parent/pom.xml</relativePath>
+        <relativePath>../message-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>sb-cloud-stream-demo-config</artifactId>
 
     <name>config</name>
-    <description>Config service module</description>
+    <description>Config message routes module</description>
 
+    <dependencies>
+        
+    </dependencies>
     <build>
         <plugins>
             <plugin>
