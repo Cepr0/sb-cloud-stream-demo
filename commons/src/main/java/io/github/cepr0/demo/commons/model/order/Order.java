@@ -1,6 +1,6 @@
 package io.github.cepr0.demo.commons.model.order;
 
-import io.github.cepr0.demo.commons.model.base.UuidEntity;
+import io.github.cepr0.demo.commons.model.base.LongIdEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +18,7 @@ import java.time.Instant;
 @Table(name = "orders")
 @DynamicInsert
 @DynamicUpdate
-public class Order extends UuidEntity {
+public class Order extends LongIdEntity {
 
 	@Column(nullable = false)
 	private Instant createdAt;

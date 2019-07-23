@@ -5,9 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
-import java.util.UUID;
 
-public interface OrderRepo extends JpaRepository<Order, UUID> {
+public interface OrderRepo extends JpaRepository<Order, Long> {
 	@Query("select o from Order o where o.status = 'PENDING' and o.id = ?1")
-	Optional<Order> getPendingById(UUID orderId);
+	Optional<Order> getPendingById(long orderId);
 }

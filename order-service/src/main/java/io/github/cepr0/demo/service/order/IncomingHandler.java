@@ -8,8 +8,6 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.scheduling.annotation.Async;
 
-import java.util.UUID;
-
 @Slf4j
 @EnableBinding(Channels.class)
 public class IncomingHandler {
@@ -24,7 +22,7 @@ public class IncomingHandler {
 	@StreamListener(Channels.ORDER_COMPLETED)
 	public void handleOrderCompleted(OrderCompleted event) {
 		log.info("[i] Received: {}", event);
-		UUID orderId = event.getOrderId();
+		long orderId = event.getOrderId();
 		orderService.markAsCompleted(orderId)
 				.ifPresentOrElse(
 						order -> log.info("[i] Order marked as completed: {}", order),
@@ -36,7 +34,7 @@ public class IncomingHandler {
 	@StreamListener(Channels.ORDER_FAILED)
 	public void markAsFailed(OrderFailed event) {
 		log.info("[i] Received: {}", event);
-		UUID orderId = event.getOrderId();
+		long orderId = event.getOrderId();
 		Reason reason = event.getReason();
 		orderService.markAsFailed(orderId, reason)
 				.ifPresentOrElse(

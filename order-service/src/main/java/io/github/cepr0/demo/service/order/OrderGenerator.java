@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @Component
-@Profile({"!dev", "!test"})
+@Profile("generate")
 public class OrderGenerator {
 
 	private static final int MAX_PRODUCT_ID = 10;
@@ -23,7 +23,7 @@ public class OrderGenerator {
 	}
 
 	@Async
-	@Scheduled(fixedRate = 500)
+	@Scheduled(fixedRate = 100)
 	public void generate() {
 		var random = ThreadLocalRandom.current();
 		int productId = random.nextInt(1, MAX_PRODUCT_ID + 1 + NOT_EXISTED_PRODUCT_NUMBER);

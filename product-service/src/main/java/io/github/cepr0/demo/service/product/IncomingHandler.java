@@ -8,12 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
-
-import java.util.UUID;
 
 @Slf4j
-@EnableAsync
+// @EnableAsync
 @EnableBinding(Channels.class)
 public class IncomingHandler {
 
@@ -31,9 +28,9 @@ public class IncomingHandler {
 		log.info("[i] Received: {}", orderCreatedEvent);
 
 		int productId = orderCreatedEvent.getOrder().getProductId();
-		UUID orderId = orderCreatedEvent.getOrder().getId();
+		long orderId = orderCreatedEvent.getOrder().getId();
 
-		Event event = productService.sell(productId)
+		Event event = productService.sell(orderId, productId)
 				.map(amount -> {
 					if (amount > 0) {
 						int balance = amount - 1;
