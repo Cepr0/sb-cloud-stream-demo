@@ -1,0 +1,64 @@
+version: '2.4'
+
+services:
+
+  postgres:
+    extends:
+      file: ../postgres-compose.yml
+      service: postgresql
+
+  rabbit:
+    image: rabbitmq:management
+    container_name: rabbit
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: rabbitmqctl status
+      timeout: 5s
+      interval: 5s
+      retries: 5
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  config:
+    build: ../config
+    container_name: config
+    restart: 'no'
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbit
+    depends_on:
+      rabbit:
+        condition: service_healthy
+
+  product-service:
+    build: ../product-service
+    restart: 'on-failure'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/product_service
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_RABBITMQ_HOST=rabbit
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  order-service:
+    build: ../order-service
+    restart: 'on-failure'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/order_service
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_RABBITMQ_HOST=rabbit
+      - SPRING_PROFILES_ACTIVE=generate
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      product-service:
+        condition: service_started
