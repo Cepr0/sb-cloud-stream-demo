@@ -2,6 +2,11 @@ version: '2.4'
 
 services:
 
+  postgres:
+    extends:
+      file: postgres-compose.yml
+      service: postgresql
+
   rabbit:
     image: rabbitmq:management
     container_name: rabbit
@@ -13,11 +18,9 @@ services:
       timeout: 5s
       interval: 5s
       retries: 5
-
-  postgres:
-    extends:
-      file: postgres-compose.yml
-      service: postgresql
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   ready:
     image: alpine
@@ -25,7 +28,5 @@ services:
     restart: 'no'
     depends_on:
       rabbit:
-        condition: service_healthy
-      postgres:
         condition: service_healthy
 
