@@ -17,7 +17,6 @@
     <description>Parent module for message related modules</description>
 
     <properties>
-        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
         <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
         <spring-cloud-stream.version>Fishtown.SR3</spring-cloud-stream.version>
     </properties>

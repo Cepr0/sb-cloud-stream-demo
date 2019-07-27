@@ -18,7 +18,6 @@
     <description>Parent module for database related services</description>
 
     <properties>
-        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
         <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
         <spring-cloud-stream.version>Fishtown.SR3</spring-cloud-stream.version>
     </properties>
@@ -30,11 +29,11 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.integralblue</groupId>
-            <artifactId>log4jdbc-spring-boot-starter</artifactId>
-            <version>1.0.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.integralblue</groupId>-->
+<!--            <artifactId>log4jdbc-spring-boot-starter</artifactId>-->
+<!--            <version>1.0.2</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.postgresql</groupId>

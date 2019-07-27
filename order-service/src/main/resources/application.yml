@@ -1,3 +1,4 @@
+
 spring:
   cloud:
     stream:
@@ -64,3 +65,4 @@ log4jdbc:
     addsemicolon: true
     maxlinelength: 0
   trim.sql.extrablanklines: false
+management:

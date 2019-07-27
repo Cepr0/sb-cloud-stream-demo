@@ -1,0 +1,21 @@
+# Create a new order for existent product (id: from 1 to 10)
+
+POST http://localhost:8081/orders
+Content-Type: application/json
+
+{
+  "productId": 1
+}
+
+###
+
+# Create a new order for nonexistent product
+
+POST http://localhost:8082/orders
+Content-Type: application/json
+
+{
+  "productId": 11
+}
+
+###

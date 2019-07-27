@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <artifactId>sb-cloud-stream-demo-discovery-service</artifactId>
+
     <parent>
+        <artifactId>sb-cloud-stream-demo</artifactId>
         <groupId>io.github.cepr0</groupId>
-        <artifactId>sb-cloud-stream-demo-db-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../db-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>sb-cloud-stream-demo-order-service</artifactId>
+    <name>discovery-service</name>
+    <description>Discovery service module</description>
 
-    <name>order-service</name>
-    <description>Order service module</description>
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -30,15 +35,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
     </dependencies>
 
@@ -50,5 +47,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
