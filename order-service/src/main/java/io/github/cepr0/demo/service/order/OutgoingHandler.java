@@ -32,10 +32,11 @@ public class OutgoingHandler {
 	}
 
 	@Transactional
-	public void send(int productId) {
+	public Order send(int productId) {
 		Order order = orderService.create(productId);
 		var event = new OrderCreated(order);
 		publisher.publishEvent(event);
+		return order;
 	}
 
 	@TransactionalEventListener

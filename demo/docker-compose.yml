@@ -15,9 +15,9 @@ services:
       - 15672:15672
     healthcheck:
       test: rabbitmqctl status
+      interval: 20s
       timeout: 5s
-      interval: 5s
-      retries: 5
+      retries: 6
     depends_on:
       postgres:
         condition: service_healthy
@@ -31,6 +31,20 @@ services:
     depends_on:
       rabbit:
         condition: service_healthy
+
+  discovery-service:
+    build: ../discovery-service
+    container_name: discovery-service
+    restart: 'on-failure'
+    ports:
+      - 8761:8761
+    environment:
+      - EUREKA_HOSTNAME=discovery-service
+    healthcheck:
+      test: curl -f localhost:8761/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      retries: 6
 
   product-service:
     build: ../product-service
@@ -54,11 +68,30 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING_RABBITMQ_HOST=rabbit
-      - SPRING_PROFILES_ACTIVE=generate
+      - EUREKA_HOSTNAME=discovery-service
+    healthcheck:
+      test: curl -f localhost:8080/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      retries: 6
     depends_on:
       rabbit:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      discovery-service:
+        condition: service_healthy
       product-service:
         condition: service_started
+
+  demo-client:
+    build: ../demo-client
+    restart: 'on-failure'
+    environment:
+      - CLIENT_INTERVAL=200
+      - EUREKA_HOSTNAME=discovery-service
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      order-service:
+        condition: service_healthy

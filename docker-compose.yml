@@ -15,9 +15,9 @@ services:
       - 15672:15672
     healthcheck:
       test: rabbitmqctl status
+      interval: 20s
       timeout: 5s
-      interval: 5s
-      retries: 5
+      retries: 6
     depends_on:
       postgres:
         condition: service_healthy

@@ -27,10 +27,13 @@
         <module>config</module>
         <module>message-parent</module>
         <module>discovery-service</module>
+        <module>demo-client</module>
     </modules>
 
     <properties>
         <java.version>11</java.version>
+        <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
+        <spring-cloud-stream.version>Fishtown.SR3</spring-cloud-stream.version>
     </properties>
 
     <dependencyManagement>

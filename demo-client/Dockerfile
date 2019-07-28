@@ -1,7 +1,5 @@
 FROM openjdk:11-jre-slim
 VOLUME /tmp
-RUN apt-get update
-RUN apt-get -qq -y install curl
 WORKDIR /service
 COPY target/*.jar service.jar
 ENTRYPOINT exec java -server \

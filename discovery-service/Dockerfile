@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim
+FROM openjdk:8-jre-slim
 VOLUME /tmp
 RUN apt-get update
 RUN apt-get -qq -y install curl

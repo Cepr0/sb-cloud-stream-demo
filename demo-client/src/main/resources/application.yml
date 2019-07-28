@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: demo-client
+  task:
+    scheduling:
+      pool:
+        size: 8
+      thread-name-prefix: order-
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_HOSTNAME:localhost}:8761/eureka/
