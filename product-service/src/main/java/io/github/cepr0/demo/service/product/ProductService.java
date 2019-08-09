@@ -2,6 +2,9 @@ package io.github.cepr0.demo.service.product;
 
 import io.github.cepr0.demo.commons.model.product.Product;
 import io.github.cepr0.demo.commons.model.product.ProductOrder;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.OptimisticLockException;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ProductService {
 
@@ -27,7 +31,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	@Retryable(OptimisticLockException.class)
+	@Retryable(value = OptimisticLockException.class, backoff = @Backoff(delay = 100))
 	public Optional<Integer> sell(long orderId, int productId) {
 		return productAmountRepo.findById(productId)
 				.map(productAmount -> {
@@ -39,5 +43,27 @@ public class ProductService {
 					productOrderRepo.save(new ProductOrder(orderId, product));
 					return amount;
 				});
+	}
+
+	@Transactional
+	@Retryable(value = OptimisticLockException.class, backoff = @Backoff(delay = 100))
+	public Optional<Integer> restock(int productId, int amount) {
+		return productAmountRepo.findById(productId)
+				.map(productAmount -> {
+					int currentAmount = productAmount.getAmount();
+					int newAmount = currentAmount + amount;
+					productAmount.setAmount(newAmount);
+					return newAmount;
+				});
+	}
+
+	@Recover
+	public void recoverSell(OptimisticLockException e, long orderId, int productId) {
+		log.info("[w] Selling the product '{}' for order '{}' is failed because of {}", productId, orderId, e.toString());
+	}
+
+	@Recover
+	public void recoverRestock(OptimisticLockException e, int productId, int amount) {
+		log.info("[w] Restocking the product '{}' with amount '{}' is failed because of {}", productId, amount, e.toString());
 	}
 }
