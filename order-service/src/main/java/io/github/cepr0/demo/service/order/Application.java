@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -38,7 +39,7 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
-	@PostMapping("/orders")
+	@PostMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity createOrder(@RequestBody OrderRequest request) {
 		int productId = request.getProductId();
 		Order order = handler.send(productId);

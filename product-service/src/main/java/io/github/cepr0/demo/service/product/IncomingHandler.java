@@ -33,10 +33,11 @@ public class IncomingHandler {
 		Event event = productService.sell(orderId, productId)
 				.map(amount -> {
 					if (amount > 0) {
-						int balance = amount - 1;
-						return OrderCompleted.of(orderId, balance);
+						log.info("[i] Order #{} for product#{} competed.", orderId, productId);
+						return OrderCompleted.of(orderId, amount - 1);
+					} else {
+						return OrderFailed.productEnded(orderId, productId);
 					}
-					return OrderFailed.productEnded(orderId, productId);
 				})
 				.orElse(OrderFailed.productNotFound(orderId, productId));
 

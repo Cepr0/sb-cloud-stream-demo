@@ -1,7 +1,7 @@
-package io.github.cepr0.demo.client;
+package io.github.cepr0.demo.service.supply;
 
-import io.github.cepr0.demo.commons.dto.OrderRequest;
-import io.github.cepr0.demo.commons.dto.OrderResponse;
+import io.github.cepr0.demo.commons.dto.RestockRequest;
+import io.github.cepr0.demo.commons.dto.RestockResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
 import org.springframework.boot.WebApplicationType;
@@ -14,18 +14,13 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerExchangeFilterFunction;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 @Slf4j
-@EnableAsync
-@EnableScheduling
 @SpringBootApplication
 @EnableConfigurationProperties(AppProps.class)
 public class Application {
@@ -38,21 +33,22 @@ public class Application {
 	}
 
 	@Bean
-	public Function<Integer, ResponseEntity<OrderResponse>> funCreateOrderRest(RestTemplate restTemplate) {
-		return (productId) -> restTemplate.postForEntity(
-				"/",
-				new OrderRequest(productId),
-				OrderResponse.class
+	public BiFunction<Integer, Integer, ResponseEntity<RestockResponse>> funRestockRest(RestTemplate restTemplate) {
+		return (productId, amount) -> restTemplate.postForEntity(
+				"/{productId}/restock",
+				new RestockRequest(amount),
+				RestockResponse.class,
+				productId
 		);
 	}
 
-	@Primary
 	@Bean
-	public Function<Integer, ResponseEntity<OrderResponse>> funCreateOrder(WebClient webClient) {
-		return (productId) -> webClient.post()
-				.syncBody(new OrderRequest(productId))
+	public BiFunction<Integer, Integer, ResponseEntity<RestockResponse>> funRestock(WebClient webClient) {
+		return (productId, amount) -> webClient.post()
+				.uri("/{productId}/restock", productId)
+				.syncBody(new RestockRequest(amount))
 				.exchange()
-				.flatMap(r -> r.toEntity(OrderResponse.class))
+				.flatMap(r -> r.toEntity(RestockResponse.class))
 				.block();
 	}
 
@@ -63,7 +59,7 @@ public class Application {
 		@Bean
 		public RestTemplate restTemplate(RestTemplateBuilder templateBuilder) {
 			return templateBuilder
-					.rootUri("http://order-service/orders")
+					.rootUri("http://product-service/products")
 					.build();
 		}
 
@@ -72,7 +68,7 @@ public class Application {
 		WebClient webClient(LoadBalancerClient loadBalancerClient) {
 			return WebClient.builder()
 					.filter(new LoadBalancerExchangeFilterFunction(loadBalancerClient))
-					.baseUrl("http://order-service/orders")
+					.baseUrl("http://product-service/products")
 					.build();
 		}
 	}

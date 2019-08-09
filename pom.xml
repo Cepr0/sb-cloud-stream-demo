@@ -28,6 +28,7 @@
         <module>message-parent</module>
         <module>discovery-service</module>
         <module>demo-client</module>
+        <module>supply-service</module>
     </modules>
 
     <properties>
