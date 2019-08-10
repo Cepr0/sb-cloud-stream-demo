@@ -17,7 +17,7 @@ services:
       test: rabbitmqctl status
       interval: 20s
       timeout: 5s
-      retries: 6
+      retries: 10
     depends_on:
       postgres:
         condition: service_healthy
@@ -44,7 +44,7 @@ services:
       test: curl -f localhost:8761/actuator/health | grep UP || exit 1
       interval: 20s
       timeout: 5s
-      retries: 6
+      retries: 10
 
   product-service:
     build: ../product-service
@@ -54,10 +54,18 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING_RABBITMQ_HOST=rabbit
+      - EUREKA_HOSTNAME=discovery-service
+    healthcheck:
+      test: curl -f localhost:8080/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      retries: 10
     depends_on:
       rabbit:
         condition: service_healthy
       postgres:
+        condition: service_healthy
+      discovery-service:
         condition: service_healthy
 
   order-service:
@@ -73,7 +81,7 @@ services:
       test: curl -f localhost:8080/actuator/health | grep UP || exit 1
       interval: 20s
       timeout: 5s
-      retries: 6
+      retries: 10
     depends_on:
       rabbit:
         condition: service_healthy
@@ -83,6 +91,23 @@ services:
         condition: service_healthy
       product-service:
         condition: service_started
+
+  supply-service:
+    build: ../supply-service
+    restart: 'on-failure'
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbit
+      - EUREKA_HOSTNAME=discovery-service
+    healthcheck:
+      test: curl -f localhost:8080/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
 
   demo-client:
     build: ../demo-client
@@ -94,4 +119,6 @@ services:
       discovery-service:
         condition: service_healthy
       order-service:
+        condition: service_healthy
+      supply-service:
         condition: service_healthy
