@@ -5,8 +5,8 @@ import org.springframework.messaging.SubscribableChannel;
 
 public interface Channels {
 
-	String ORDER_FAILED = "order-failed";
+	String PRODUCT_ENDED = "product-ended";
 
-	@Input(ORDER_FAILED)
-	SubscribableChannel orderFailed();
+	@Input(PRODUCT_ENDED)
+	SubscribableChannel productEnded();
 }

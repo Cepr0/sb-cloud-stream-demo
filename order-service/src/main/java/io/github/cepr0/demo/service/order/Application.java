@@ -4,9 +4,10 @@ import io.github.cepr0.demo.commons.dto.OrderRequest;
 import io.github.cepr0.demo.commons.dto.OrderResponse;
 import io.github.cepr0.demo.commons.model.order.Order;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,7 +37,9 @@ public class Application {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		new SpringApplicationBuilder(Application.class)
+				.bannerMode(Banner.Mode.OFF)
+				.run(args);
 	}
 
 	@PostMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

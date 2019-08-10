@@ -15,6 +15,7 @@ import org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerExchan
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -50,6 +51,8 @@ public class Application {
 	@Bean
 	public Function<Integer, ResponseEntity<OrderResponse>> funCreateOrder(WebClient webClient) {
 		return (productId) -> webClient.post()
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.accept(MediaType.APPLICATION_JSON_UTF8)
 				.syncBody(new OrderRequest(productId))
 				.exchange()
 				.flatMap(r -> r.toEntity(OrderResponse.class))

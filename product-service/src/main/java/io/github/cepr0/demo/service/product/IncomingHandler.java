@@ -1,9 +1,6 @@
 package io.github.cepr0.demo.service.product;
 
-import io.github.cepr0.demo.commons.event.Event;
-import io.github.cepr0.demo.commons.event.OrderCompleted;
-import io.github.cepr0.demo.commons.event.OrderCreated;
-import io.github.cepr0.demo.commons.event.OrderFailed;
+import io.github.cepr0.demo.commons.event.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -31,15 +28,16 @@ public class IncomingHandler {
 		long orderId = orderCreatedEvent.getOrder().getId();
 
 		Event event = productService.sell(orderId, productId)
-				.map(amount -> {
+				.map(productAmount -> {
+					int amount = productAmount.getAmount();
 					if (amount > 0) {
 						log.info("[i] Order #{} for product#{} competed.", orderId, productId);
 						return OrderCompleted.of(orderId, amount - 1);
 					} else {
-						return OrderFailed.productEnded(orderId, productId);
+						return ProductEnded.of(orderId, productId, productAmount.getVersion());
 					}
 				})
-				.orElse(OrderFailed.productNotFound(orderId, productId));
+				.orElse(ProductNotFound.of(orderId, productId));
 
 		outgoingHandler.send(event);
 	}

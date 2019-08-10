@@ -11,14 +11,14 @@ spring:
     stream:
       bindings:
         # inputs
-        order-failed:
-          destination: order-failed
+        product-ended:
+          destination: product-ended
           group: supply-service
 
       rabbit:
         bindings:
           # inputs
-          order-failed:
+          product-ended:
             consumer:
-              binding-routing-key: 'order-failed'
+              binding-routing-key: 'product-ended'
               queue-name-group-only: false

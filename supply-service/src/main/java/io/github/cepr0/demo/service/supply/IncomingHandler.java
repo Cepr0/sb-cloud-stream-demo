@@ -1,7 +1,6 @@
 package io.github.cepr0.demo.service.supply;
 
-import io.github.cepr0.demo.commons.event.OrderFailed;
-import io.github.cepr0.demo.commons.model.order.Reason;
+import io.github.cepr0.demo.commons.event.ProductEnded;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -18,15 +17,15 @@ public class IncomingHandler {
 	}
 
 	@Async
-	@StreamListener(Channels.ORDER_FAILED)
-	public void restockProduct(OrderFailed event) {
+	@StreamListener(Channels.PRODUCT_ENDED)
+	public void restockProduct(ProductEnded event) {
 		log.info("[i] Received: {}", event);
-		if (event.getReason() == Reason.PRODUCT_ENDED) {
-			int productId = event.getProductId();
-			productClient.restock(productId).ifPresentOrElse(
-					amount -> log.info("[i] Product #{} restocked: {}", productId, amount),
-					() -> log.info("[i] Couldn't restock Product #{}", productId)
-			);
-		}
+
+		int productId = event.getProductId();
+		int version = event.getVersion();
+		productClient.restock(productId, version).ifPresentOrElse(
+				amount -> log.info("[i] Product #{} restocked: {}", productId, amount),
+				() -> log.info("[i] Couldn't restock Product #{}", productId)
+		);
 	}
 }

@@ -6,9 +6,14 @@ spring:
         order-completed-to-order-service:
           destination: common
           group: order-completed.order-service
-        order-failed-to-order-service:
+
+        product-not-found-to-order-service:
           destination: common
-          group: order-failed.order-service
+          group: product-not-found.order-service
+
+        product-ended-to-order-service:
+          destination: common
+          group: product-ended.order-service
 
         # to product-service
         order-created-to-product-service:
@@ -16,9 +21,13 @@ spring:
           group: order-created.product-service
 
         # to supply-service
-        order-failed-to-supply-service:
+        product-not-found-to-supply-service:
           destination: common
-          group: order-failed.supply-service
+          group: product-not-found.supply-service
+
+        product-ended-to-supply-service:
+          destination: common
+          group: product-ended.supply-service
 
       rabbit:
         bindings:
@@ -27,9 +36,15 @@ spring:
             consumer:
               binding-routing-key: 'order-completed'
               queue-name-group-only: true
-          order-failed-to-order-service:
+
+          product-not-found-to-order-service:
             consumer:
-              binding-routing-key: 'order-failed'
+              binding-routing-key: 'product-not-found'
+              queue-name-group-only: true
+
+          product-ended-to-order-service:
+            consumer:
+              binding-routing-key: 'product-ended'
               queue-name-group-only: true
 
           # to product-service
@@ -39,7 +54,13 @@ spring:
               queue-name-group-only: true
 
           # to supply-service
-          order-failed-to-supply-service:
+          product-not-found-to-supply-service:
             consumer:
-              binding-routing-key: 'order-failed'
+              binding-routing-key: 'product-not-found'
               queue-name-group-only: true
+
+          product-ended-to-supply-service:
+            consumer:
+              binding-routing-key: 'product-ended'
+              queue-name-group-only: true
+

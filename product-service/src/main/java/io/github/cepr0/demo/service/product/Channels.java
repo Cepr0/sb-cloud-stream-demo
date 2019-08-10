@@ -9,7 +9,8 @@ public interface Channels {
 
 	String ORDER_CREATED = "order-created";
 	String ORDER_COMPLETED = "order-completed";
-	String ORDER_FAILED = "order-failed";
+	String PRODUCT_NOT_FOUND = "product-not-found";
+	String PRODUCT_ENDED = "product-ended";
 
 	@Input(ORDER_CREATED)
 	SubscribableChannel orderCreated();
@@ -17,6 +18,9 @@ public interface Channels {
 	@Output(ORDER_COMPLETED)
 	MessageChannel orderCompleted();
 
-	@Output(ORDER_FAILED)
-	MessageChannel orderFailed();
+	@Output(PRODUCT_NOT_FOUND)
+	MessageChannel productNotFound();
+
+	@Output(PRODUCT_ENDED)
+	MessageChannel productEnded();
 }

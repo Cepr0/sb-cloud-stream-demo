@@ -1,6 +1,7 @@
 package io.github.cepr0.demo.service.product;
 
 import io.github.cepr0.demo.commons.model.product.Product;
+import io.github.cepr0.demo.commons.model.product.ProductAmount;
 import io.github.cepr0.demo.commons.model.product.ProductOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Backoff;
@@ -32,7 +33,7 @@ public class ProductService {
 
 	@Transactional
 	@Retryable(value = OptimisticLockException.class, backoff = @Backoff(delay = 100))
-	public Optional<Integer> sell(long orderId, int productId) {
+	public Optional<ProductAmount> sell(long orderId, int productId) {
 		return productAmountRepo.findById(productId)
 				.map(productAmount -> {
 					int amount = productAmount.getAmount();
@@ -41,17 +42,16 @@ public class ProductService {
 					}
 					Product product = productRepo.getOne(productId);
 					productOrderRepo.save(new ProductOrder(orderId, product));
-					return amount;
+					return productAmount;
 				});
 	}
 
 	@Transactional
 	@Retryable(value = OptimisticLockException.class, backoff = @Backoff(delay = 100))
-	public Optional<Integer> restock(int productId, int amount) {
-		return productAmountRepo.findById(productId)
+	public Optional<Integer> restock(int productId, int version, int amount) {
+		return productAmountRepo.findByIdAndVersion(productId, version)
 				.map(productAmount -> {
-					int currentAmount = productAmount.getAmount();
-					int newAmount = currentAmount + amount;
+					int newAmount = productAmount.getAmount() + amount;
 					productAmount.setAmount(newAmount);
 					return newAmount;
 				});

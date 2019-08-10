@@ -15,11 +15,15 @@ spring:
         order-created:
           destination: order-created
           group: product-service
+
         # outputs
         order-completed:
           destination: common
 
-        order-failed:
+        product-not-found:
+          destination: common
+
+        product-ended:
           destination: common
 
       rabbit:
@@ -29,14 +33,19 @@ spring:
             consumer:
               binding-routing-key: 'order-created'
               queue-name-group-only: false
+
           # outputs
           order-completed:
             producer:
               routing-key-expression: '''order-completed'''
 
-          order-failed:
+          product-not-found:
             producer:
-              routing-key-expression: '''order-failed'''
+              routing-key-expression: '''product-not-found'''
+
+          product-ended:
+            producer:
+              routing-key-expression: '''product-ended'''
 
   datasource:
     url: jdbc:postgresql://localhost:5432/product_service

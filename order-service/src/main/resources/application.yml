@@ -14,13 +14,18 @@ spring:
         # outputs
         order-created:
           destination: common
+
         # inputs
         order-completed:
           destination: order-completed
           group: order-service
 
-        order-failed:
-          destination: order-failed
+        product-not-found:
+          destination: product-not-found
+          group: order-service
+
+        product-ended:
+          destination: product-ended
           group: order-service
 
       rabbit:
@@ -29,15 +34,21 @@ spring:
           order-created:
             producer:
               routing-key-expression: '''order-created'''
+
           # inputs
           order-completed:
             consumer:
               binding-routing-key: 'order-completed'
               queue-name-group-only: false
 
-          order-failed:
+          product-not-found:
             consumer:
-              binding-routing-key: 'order-failed'
+              binding-routing-key: 'product-not-found'
+              queue-name-group-only: false
+
+          product-ended:
+            consumer:
+              binding-routing-key: 'product-ended'
               queue-name-group-only: false
 
   datasource:

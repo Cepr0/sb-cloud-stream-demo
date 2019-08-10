@@ -1,5 +1,6 @@
 package io.github.cepr0.demo.service.supply;
 
+import io.github.cepr0.demo.commons.TriFunction;
 import io.github.cepr0.demo.commons.dto.RestockRequest;
 import io.github.cepr0.demo.commons.dto.RestockResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -13,39 +14,41 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerExchangeFilterFunction;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.function.BiFunction;
-
 @Slf4j
+@EnableAsync
 @SpringBootApplication
 @EnableConfigurationProperties(AppProps.class)
 public class Application {
 
 	public static void main(String[] args) {
 		new SpringApplicationBuilder(Application.class)
-				// .web(WebApplicationType.NONE)
 				.bannerMode(Banner.Mode.OFF)
 				.run(args);
 	}
 
 	@Bean
-	public BiFunction<Integer, Integer, ResponseEntity<RestockResponse>> funRestockRest(RestTemplate restTemplate) {
-		return (productId, amount) -> restTemplate.postForEntity(
+	public TriFunction<Integer, Integer, Integer, ResponseEntity<RestockResponse>> funRestockRest(RestTemplate restTemplate) {
+		return (productId, amount, version) -> restTemplate.postForEntity(
 				"/{productId}/restock",
-				new RestockRequest(amount),
+				new RestockRequest(amount, version),
 				RestockResponse.class,
 				productId
 		);
 	}
 
 	@Bean
-	public BiFunction<Integer, Integer, ResponseEntity<RestockResponse>> funRestock(WebClient webClient) {
-		return (productId, amount) -> webClient.post()
+	public TriFunction<Integer, Integer, Integer, ResponseEntity<RestockResponse>> funRestock(WebClient webClient) {
+		return (productId, amount, version) -> webClient.post()
 				.uri("/{productId}/restock", productId)
-				.syncBody(new RestockRequest(amount))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.accept(MediaType.APPLICATION_JSON_UTF8)
+				.syncBody(new RestockRequest(amount, version))
 				.exchange()
 				.flatMap(r -> r.toEntity(RestockResponse.class))
 				.block();

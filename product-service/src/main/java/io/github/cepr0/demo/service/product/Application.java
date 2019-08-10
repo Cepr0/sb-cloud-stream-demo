@@ -3,9 +3,10 @@ package io.github.cepr0.demo.service.product;
 import io.github.cepr0.demo.commons.dto.RestockRequest;
 import io.github.cepr0.demo.commons.dto.RestockResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +34,16 @@ public class Application {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		new SpringApplicationBuilder(Application.class)
+				.bannerMode(Banner.Mode.OFF)
+				.run(args);
 	}
 
 	@PostMapping(value = "/products/{productId}/restock", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity restock(@PathVariable int productId, @RequestBody RestockRequest request) {
 		log.info("[i] Received {}", request);
 		return ResponseEntity.of(
-				productService.restock(productId, request.getAmount()).map(amount -> {
+				productService.restock(productId, request.getVersion(), request.getAmount()).map(amount -> {
 					log.info("[i] Product #{} restocked: {}", productId, amount);
 					return new RestockResponse(amount);
 				})
