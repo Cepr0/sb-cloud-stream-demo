@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: stat-service
+
+  cloud:
+    stream:
+      bindings:
+        # inputs
+        order-created:
+          destination: order-created
+          group: stat-service
+
+        order-completed:
+          destination: order-completed
+          group: stat-service
+
+        product-not-found:
+          destination: product-not-found
+          group: stat-service
+
+        product-ended:
+          destination: product-ended
+          group: stat-service
+
+      rabbit:
+        bindings:
+          # inputs
+          order-created:
+            consumer:
+              binding-routing-key: 'order-created'
+              queue-name-group-only: false
+
+          order-completed:
+            consumer:
+              binding-routing-key: 'order-completed'
+              queue-name-group-only: false
+
+          product-not-found:
+            consumer:
+              binding-routing-key: 'product-not-found'
+              queue-name-group-only: false
+
+          product-ended:
+            consumer:
+              binding-routing-key: 'product-ended'
+              queue-name-group-only: false

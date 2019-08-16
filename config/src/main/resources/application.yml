@@ -21,13 +21,26 @@ spring:
           group: order-created.product-service
 
         # to supply-service
-        product-not-found-to-supply-service:
-          destination: common
-          group: product-not-found.supply-service
-
         product-ended-to-supply-service:
           destination: common
           group: product-ended.supply-service
+
+        # to stat-service
+        order-created-to-stat-service:
+          destination: common
+          group: order-created.stat-service
+
+        order-completed-to-stat-service:
+          destination: common
+          group: order-completed.stat-service
+
+        product-not-found-to-stat-service:
+          destination: common
+          group: product-not-found.stat-service
+
+        product-ended-to-stat-service:
+          destination: common
+          group: product-ended.stat-service
 
       rabbit:
         bindings:
@@ -54,12 +67,28 @@ spring:
               queue-name-group-only: true
 
           # to supply-service
-          product-not-found-to-supply-service:
+          product-ended-to-supply-service:
+            consumer:
+              binding-routing-key: 'product-ended'
+              queue-name-group-only: true
+
+          # to stat-service
+          order-created-to-stat-service:
+            consumer:
+              binding-routing-key: 'order-created'
+              queue-name-group-only: true
+
+          order-completed-to-stat-service:
+            consumer:
+              binding-routing-key: 'order-completed'
+              queue-name-group-only: true
+
+          product-not-found-to-stat-service:
             consumer:
               binding-routing-key: 'product-not-found'
               queue-name-group-only: true
 
-          product-ended-to-supply-service:
+          product-ended-to-stat-service:
             consumer:
               binding-routing-key: 'product-ended'
               queue-name-group-only: true

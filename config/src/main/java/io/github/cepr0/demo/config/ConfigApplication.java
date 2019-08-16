@@ -36,10 +36,20 @@ public class ConfigApplication {
 		SubscribableChannel orderCreatedToProductService();
 
 		// to supply-service
-		@Input("product-not-found-to-supply-service")
-		SubscribableChannel productNotFoundToSupplyService();
-
 		@Input("product-ended-to-supply-service")
 		SubscribableChannel productEndedToSupplyService();
+
+		// to stat-service
+		@Input("order-created-to-stat-service")
+		SubscribableChannel orderCreatedToStatService();
+
+		@Input("order-completed-to-stat-service")
+		SubscribableChannel orderCompletedToStatService();
+
+		@Input("product-not-found-to-stat-service")
+		SubscribableChannel productNotFoundToStatService();
+
+		@Input("product-ended-to-stat-service")
+		SubscribableChannel productEndedToStatService();
 	}
 }
