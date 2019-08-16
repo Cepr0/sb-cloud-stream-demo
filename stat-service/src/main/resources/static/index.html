@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<title>Event rates</title>
+</head>
+<body>
+
+<div class="container-fluid">
+	<div class="row justify-content-start m-4">
+
+		<!-- Event stats -->
+		<div class="col-auto m-3" style="width: 25rem;">
+			<div class="card" style="min-height: 10rem;">
+				<h4 class="card-header">Event rates</h4>
+				<ul id="counters" class="list-group list-group-flush">
+				</ul>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script>
+	window.onload = () => {
+		let eventSource = new EventSource('/stats');
+		eventSource.onmessage = event => {
+			let counters = document.getElementById('counters');
+			counters.innerHTML = "";
+			for (let [key, value] of Object.entries(JSON.parse(event.data))) {
+				counters.insertAdjacentHTML("beforeend",
+						`<li class="list-group-item text-truncate">
+						  <div class="row">
+							 <div class="col-6 text-truncate">${key}</div>
+							 <div class="col-3 text-truncate text-monospace text-right px-1"><strong>${value}</strong></div>
+							 <div class="col-3 text-truncate px-1">ev/s</div>
+						  </div>
+						</li>`
+				)
+			}
+		};
+	};
+</script>
+</body>
+</html>

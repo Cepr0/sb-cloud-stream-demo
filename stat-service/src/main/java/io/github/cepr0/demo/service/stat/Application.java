@@ -7,13 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxProcessor;
 
 @Slf4j
-@EnableAsync
 @EnableBinding(Channels.class)
 @SpringBootApplication
 public class Application {
@@ -30,25 +27,21 @@ public class Application {
 				.run(args);
 	}
 
-	@Async
 	@StreamListener(Channels.ORDER_CREATED)
 	public void handleOrderCreatedEvent(Flux<OrderCreated> stream) {
 		subscribeEvent(stream);
 	}
 
-	@Async
 	@StreamListener(Channels.ORDER_COMPLETED)
 	public void handleOrderCompletedEvent(Flux<OrderCompleted> stream) {
 		subscribeEvent(stream);
 	}
 
-	@Async
 	@StreamListener(Channels.PRODUCT_NOT_FOUND)
 	public void handleProductNotFoundEvent(Flux<ProductNotFound> stream) {
 		subscribeEvent(stream);
 	}
 
-	@Async
 	@StreamListener(Channels.PRODUCT_ENDED)
 	public void handleProductEndedEvent(Flux<ProductEnded> stream) {
 		subscribeEvent(stream);
