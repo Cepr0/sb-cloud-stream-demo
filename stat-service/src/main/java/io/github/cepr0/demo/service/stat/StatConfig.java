@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 @Configuration
 public class StatConfig {
 
-	private static final long FRAME_DURATION = 2;
+	static final long FRAME_DURATION = 10;
+	private static final long TIME_SHIFT = 1;
 
 	@Bean
 	public FluxProcessor<Event, Event> eventProcessor() {
@@ -32,7 +33,7 @@ public class StatConfig {
 	@Bean
 	public Flux<Map<String, Float>> eventStatsEmitter() {
 		return eventProcessor()
-				.window(Duration.ofSeconds(FRAME_DURATION))
+				.window(Duration.ofSeconds(FRAME_DURATION), Duration.ofSeconds(TIME_SHIFT))
 				.flatMap(this::calcEventRates)
 				.publish()
 				.autoConnect()

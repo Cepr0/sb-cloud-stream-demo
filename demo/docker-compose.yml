@@ -109,6 +109,23 @@ services:
       product-service:
         condition: service_healthy
 
+  stat-service:
+    build: ../stat-service
+    restart: 'on-failure'
+    container_name: stat-service
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbit
+    healthcheck:
+      test: curl -f localhost:8080/actuator/health | grep UP || exit 1
+      interval: 20s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      rabbit:
+        condition: service_healthy
+
   demo-client:
     build: ../demo-client
     restart: 'on-failure'
@@ -121,4 +138,6 @@ services:
       order-service:
         condition: service_healthy
       supply-service:
+        condition: service_healthy
+      stat-service:
         condition: service_healthy

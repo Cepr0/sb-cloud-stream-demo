@@ -10,7 +10,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceException;
 import java.util.Optional;
 
 @Slf4j
@@ -32,8 +32,9 @@ public class ProductService {
 	}
 
 	@Transactional
-	@Retryable(value = OptimisticLockException.class, backoff = @Backoff(delay = 100))
+	@Retryable(value = PersistenceException.class, maxAttempts = 5, backoff = @Backoff(delay = 100, multiplier = 1.5))
 	public Optional<ProductAmount> sell(long orderId, int productId) {
+		log.info("[i] Selling one product #{} with order #{}", productId, orderId);
 		return productAmountRepo.findById(productId)
 				.map(productAmount -> {
 					int amount = productAmount.getAmount();
@@ -47,8 +48,9 @@ public class ProductService {
 	}
 
 	@Transactional
-	@Retryable(value = OptimisticLockException.class, backoff = @Backoff(delay = 100))
+	@Retryable(value = PersistenceException.class, maxAttempts = 5, backoff = @Backoff(delay = 100, multiplier = 1.5))
 	public Optional<Integer> restock(int productId, int version, int amount) {
+		log.info("[i] Restocking the product #{} with {}", productId, amount);
 		return productAmountRepo.findByIdAndVersion(productId, version)
 				.map(productAmount -> {
 					int newAmount = productAmount.getAmount() + amount;
@@ -58,12 +60,14 @@ public class ProductService {
 	}
 
 	@Recover
-	public void recoverSell(OptimisticLockException e, long orderId, int productId) {
+	public Optional<ProductAmount> recoverSell(PersistenceException e, long orderId, int productId) {
 		log.info("[w] Selling the product '{}' for order '{}' is failed because of {}", productId, orderId, e.toString());
+		return Optional.empty();
 	}
 
 	@Recover
-	public void recoverRestock(OptimisticLockException e, int productId, int amount) {
-		log.info("[w] Restocking the product '{}' with amount '{}' is failed because of {}", productId, amount, e.toString());
+	public Optional<Integer> recoverRestock(PersistenceException e, int productId, int version, int amount) {
+		log.info("[w] Restocking the product '{}' with amount '{}' and {} is failed because of {}", productId, amount, version, e.toString());
+		return Optional.empty();
 	}
 }

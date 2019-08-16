@@ -44,7 +44,7 @@ public class Application {
 		log.info("[i] Received {}", request);
 		return ResponseEntity.of(
 				productService.restock(productId, request.getVersion(), request.getAmount()).map(amount -> {
-					log.info("[i] Product #{} restocked: {}", productId, amount);
+					log.info("[i] Product #{} is restocked: {}", productId, amount);
 					return new RestockResponse(amount);
 				})
 		);

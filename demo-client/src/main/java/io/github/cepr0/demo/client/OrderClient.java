@@ -36,9 +36,11 @@ public class OrderClient {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void onReady() {
+		long interval = props.getInterval().toMillis();
+		log.info("[i] Used interval: {}", interval);
 		scheduler.schedule(
 				this::createOrder,
-				new PeriodicTrigger(props.getInterval().toMillis())
+				new PeriodicTrigger(interval)
 		);
 	}
 
