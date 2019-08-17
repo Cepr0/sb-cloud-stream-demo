@@ -8,9 +8,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.RetryCallback;
+import org.springframework.retry.RetryContext;
+import org.springframework.retry.RetryListener;
 import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.retry.listener.RetryListenerSupport;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,5 +54,18 @@ public class Application {
 					return new RestockResponse(amount);
 				})
 		);
+	}
+
+	@Configuration
+	public static class RetryConfig {
+		@Bean
+		public RetryListener listener() {
+			return new RetryListenerSupport() {
+				@Override
+				public <T, E extends Throwable> void onError(RetryContext c, RetryCallback<T, E> cb, Throwable t) {
+					log.warn("[w] Attempt failed due to: {}", t.toString());
+				}
+			};
+		}
 	}
 }
