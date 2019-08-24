@@ -3,10 +3,6 @@
 A demonstration of using [Spring Cloud Stream][1] with [RabbitMQ][2] 
 to transfer messages between micro-services.
 
-## Architecture
-
-![architecture](architecture.png) 
-
 ## Used stack
 
 - Java 11
@@ -23,6 +19,10 @@ to transfer messages between micro-services.
 - PostgreSQL
 - RabbitMQ
 - Docker / Docker Compose
+
+## Architecture
+
+![architecture](architecture.png) 
 
 ## Workflow
 
