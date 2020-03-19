@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <name>parent</name>
-    <description>Spring Boot with Cloud Stream Kafka demo application</description>
+    <description>Spring Boot with Cloud Stream demo application</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
